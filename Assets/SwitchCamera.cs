@@ -8,27 +8,39 @@ using Unity.VisualScripting;
 public class SwitchCamera : MonoBehaviour
 {
     public List<Camera> Cameras;
+    public List<Light> Lights;
     private VisualElement frame;
-    private Button button;
-
-    int click = 0;
-    
+    private Button button1;
+    private Button button2;
+    int click1 = 0;
+    int click2 = 0;
     private void OnEnable()
     {
         var uiDocument = GetComponent<UIDocument>();
         var rootVisualElement = uiDocument.rootVisualElement;
         frame = rootVisualElement.Q<VisualElement>("Frame");
-        button = frame.Q<Button>("Button");
-        button.RegisterCallback<ClickEvent>(ev => ChangeCamera());
+        button1 = frame.Q<Button>("Button");
+        button1.RegisterCallback<ClickEvent>(ev => ChangeCamera());
+        button2 = frame.Q<Button>("Light");
+        button2.RegisterCallback<ClickEvent>(ev => ChangeLight());
     }
     private void ChangeCamera()
     {
-        Debug.Log("click");
-        EnableCamera(click);
-        click++;
-        if (click > Cameras.Count - 1)
+        EnableCamera(click1);
+        click1++;
+        if (click1 > Cameras.Count - 1)
         {
-            click = 0;
+            click1 = 0;
+        }
+    }
+
+    private void ChangeLight()
+    {
+        EnableLight(click2);
+        click2++;
+        if (click2 > Lights.Count - 1)
+        {
+            click2 = 0;
         }
     }
     private void EnableCamera(int n)
@@ -37,5 +49,10 @@ public class SwitchCamera : MonoBehaviour
         Cameras[n].enabled = true;
     }
 
+    private void EnableLight(int n)
+    {
+        Lights.ForEach(lit => lit.enabled = false);
+        Lights[n].enabled = true;
+    }
 }
 
